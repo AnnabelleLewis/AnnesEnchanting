@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "annesenchanting:block/inscribing_table_side",
+    "north": "annesenchanting:block/inscribing_table_side",
+    "south": "annesenchanting:block/inscribing_table_side",
+    "east": "annesenchanting:block/inscribing_table_side",
+    "west": "annesenchanting:block/inscribing_table_side",
+    "up": "annesenchanting:block/inscribing_table_top",
+    "down": "annesenchanting:block/inscribing_table_bottom"
+  }
+}
