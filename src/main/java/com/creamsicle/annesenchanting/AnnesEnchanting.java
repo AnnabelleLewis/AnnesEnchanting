@@ -44,6 +44,8 @@ public class AnnesEnchanting {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        System.out.println("Hello from Anne!");
     }
 
     private void setup(final FMLCommonSetupEvent event) {

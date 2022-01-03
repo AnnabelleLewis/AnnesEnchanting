@@ -1,0 +1,22 @@
+{
+  "type": "annesenchanting:inscribing",
+  "enchantments": [
+    {
+      "enchantment": "minecraft:sharpness",
+      "level": 1
+
+    },
+    {
+      "enchantment": "minecraft:sharpness",
+      "level": 1
+    }
+
+  ],
+  "catalyst":{
+      "item": "minecraft:flint"
+  },
+  "output": {
+    "enchantment": "minecraft:sharpness",
+    "level": 2
+  }
+}

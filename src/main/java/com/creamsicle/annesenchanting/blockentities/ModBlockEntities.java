@@ -15,9 +15,6 @@ public class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, AnnesEnchanting.MOD_ID);
 
-    public static final RegistryObject<BlockEntityType<InscribingTableBlockEntity>> INSCRIBING_TABLE_BLOCK_ENTITY =
-            BLOCK_ENTITIES.register("inscribing_table",
-                    () -> BlockEntityType.Builder.of(InscribingTableBlockEntity::new, ModBlocks.INSCRIBING_TABLE.get()).build(null));
 
     public static void register(IEventBus eventBus){
         BLOCK_ENTITIES.register(eventBus);

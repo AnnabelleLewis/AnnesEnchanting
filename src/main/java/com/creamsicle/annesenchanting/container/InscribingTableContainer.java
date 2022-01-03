@@ -1,58 +1,110 @@
 package com.creamsicle.annesenchanting.container;
 
+/*
+*
+*       this.addSlot(new Slot(craftSlots, 0, 34, 28));
+        this.addSlot(new Slot(craftSlots, 1, 52, 28));
+        this.addSlot(new Slot(craftSlots, 2, 43, 46));
+        this.addSlot(new Slot(resultSlots, 3, 124, 35));
+*
+* */
 
-import com.creamsicle.annesenchanting.block.ModBlocks;
 import com.creamsicle.annesenchanting.data.recipes.InscribingTableRecipe;
-import com.creamsicle.annesenchanting.data.recipes.ModRecipeTypes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.crafting.UpgradeRecipe;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 
-public class InscribingTableContainer extends AbstractContainerMenu {
-    //private BlockEntity blockEntity;
+public class InscribingTableContainer extends AbstractContainerMenu  {
+
+    private BlockPos blockPos;
     private Player playerEntity;
     private IItemHandler playerInventory;
-    private final SimpleContainer craftSlots = new SimpleContainer(3);
     private final ResultContainer resultSlots = new ResultContainer();
-    private final ContainerLevelAccess access;
+    private final SimpleContainer inputSlots = new SimpleContainer(3) {
+        /**
+         * For tile entities, ensures the chunk containing the tile entity is saved to disk later - the game won't think
+         * it hasn't changed and skip it.
+         */
+        public void setChanged() {
+            super.setChanged();
+            InscribingTableContainer.this.slotsChanged(this);
+        }
 
-    public InscribingTableContainer(int windowID, BlockPos pos, Inventory playerInventory, Player player) {
+    };
 
-        super(ModContainers.INSCRIBING_TABLE_CONTAINER.get(), windowID);
-        //blockEntity = player.getCommandSenderWorld().getBlockEntity(pos);
+    public InscribingTableContainer(int windowId, BlockPos pos, Inventory playerInventory, Player player) {
+        super(ModContainers.INSCRIBING_TABLE_CONTAINER.get(), windowId);
+        this.blockPos = pos;
         this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);
-        this.access = ContainerLevelAccess.create(player.level, pos);
-        //if (blockEntity != null) {
-        //    blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-        this.addSlot(new Slot(craftSlots, 0, 34, 28));
-        this.addSlot(new Slot(craftSlots, 1, 52, 28));
-        this.addSlot(new Slot(craftSlots, 2, 43, 46));
-        this.addSlot(new Slot(resultSlots, 3, 124, 35));
-        //    });
-        //}
-        layoutPlayerInventorySlots(10, 80);
+        this.addSlot(new Slot(inputSlots, 0, 34, 28) {
+            @Override
+            public boolean mayPlace(ItemStack pStack) {
+                return pStack.getItem() == Items.ENCHANTED_BOOK;
+                }
+            }
+        );
+        this.addSlot(new Slot(inputSlots, 1, 52, 28){
+            @Override
+            public boolean mayPlace(ItemStack pStack) {
+                return pStack.getItem() == Items.ENCHANTED_BOOK;
+            }
+        });
+        this.addSlot(new Slot(inputSlots, 2, 43, 46));
+        this.addSlot(new Slot(resultSlots, 0, 124, 35){
+            @Override
+            public boolean mayPlace(ItemStack pStack) {
+                return false;
+            }
 
+            @Override
+            public void onTake(Player pPlayer, ItemStack pStack) {
+                InscribingTableContainer.this.outputTaken();
+            }
+        });
+        layoutPlayerInventorySlots(10, 80);
     }
 
+    public void outputTaken(){
+        this.inputSlots.removeItem(0,1);
+        this.inputSlots.removeItem(1,1);
+        this.inputSlots.removeItem(2,1);
+    }
 
+    public void slotsChanged(SimpleContainer container){
+        System.out.println("Slot interracted with");
+        Optional<InscribingTableRecipe> match = playerEntity.level.getRecipeManager().
+                getRecipeFor(InscribingTableRecipe.Type.INSTANCE, inputSlots, playerEntity.level);
+        if(match.isPresent()) {
+            System.out.println("Valid recipe found");
+            System.out.println(match.get().getResultItem().getItem().toString());
+            resultSlots.setItem(0,match.get().getResultItem());
+        }
+    }
+
+    @Override
+    public boolean stillValid(Player pPlayer) {
+        return true;
+    }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
         for (int i = 0 ; i < amount ; i++) {
@@ -70,13 +122,6 @@ public class InscribingTableContainer extends AbstractContainerMenu {
         }
         return index;
     }
-    //ContainerLevelAccess.create(pLevel, pPos)
-
-    public boolean stillValid(Player pPlayer) {
-
-        return stillValid(access, pPlayer, ModBlocks.INSCRIBING_TABLE.get());
-    }
-
 
     private void layoutPlayerInventorySlots(int leftCol, int topRow) {
         // Player inventory
@@ -87,44 +132,8 @@ public class InscribingTableContainer extends AbstractContainerMenu {
         addSlotRange(playerInventory, 0, leftCol, topRow, 9, 18);
     }
 
-    protected static void slotChangedCraftingGrid(AbstractContainerMenu self, Level level, Player player, SimpleContainer inputContainer, ResultContainer output) {
-        if (!level.isClientSide) {
-            ServerPlayer serverplayer = (ServerPlayer)player;
-            ItemStack itemstack = ItemStack.EMPTY;
-            Optional<InscribingTableRecipe> optional = level.getServer().getRecipeManager().getRecipeFor(ModRecipeTypes.INSCRIBING_RECIPE, inputContainer, level);
-            if (optional.isPresent()) {
-                InscribingTableRecipe craftingrecipe = optional.get();
-                if (output.setRecipeUsed(level, serverplayer, craftingrecipe)) {
-                    itemstack = craftingrecipe.assemble(inputContainer);
-                }
-            }
-
-            output.setItem(0, itemstack);
-            self.setRemoteSlot(0, itemstack);
-            serverplayer.connection.send(new ClientboundContainerSetSlotPacket(self.containerId, self.incrementStateId(), 0, itemstack));
-        }
+    @Override
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+        return ItemStack.EMPTY;
     }
-
-    /**
-     * Callback for when the crafting matrix is changed.
-     */
-    public void slotsChanged(Container pInventory) {
-        this.access.execute((p_39386_, p_39387_) -> {
-            slotChangedCraftingGrid(this, p_39386_, this.playerEntity, this.craftSlots, this.resultSlots);
-        });
-    }
-
-    public void fillCraftSlotsStackedContents(StackedContents pItemHelper) {
-        this.craftSlots.fillStackedContents(pItemHelper);
-    }
-
-    public void clearCraftingContent() {
-        this.craftSlots.clearContent();
-        this.resultSlots.clearContent();
-    }
-
-    public boolean recipeMatches(Recipe<? super CraftingContainer> pRecipe) {
-        return pRecipe.matches(this.craftSlots, this.playerEntity.level);
-    }
-
 }
