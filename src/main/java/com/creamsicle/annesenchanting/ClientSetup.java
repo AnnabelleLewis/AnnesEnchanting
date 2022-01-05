@@ -1,6 +1,7 @@
 package com.creamsicle.annesenchanting;
 
-import com.creamsicle.annesenchanting.container.ModContainers;
+import com.creamsicle.annesenchanting.container.ModMenus;
+import com.creamsicle.annesenchanting.screen.BookshelfScreen;
 import com.creamsicle.annesenchanting.screen.InscribingTableScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,7 +15,8 @@ public class ClientSetup {
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            MenuScreens.register(ModContainers.INSCRIBING_TABLE_CONTAINER.get(), InscribingTableScreen::new);           // Attach our container to the screen
+            MenuScreens.register(ModMenus.INSCRIBING_TABLE_CONTAINER.get(), InscribingTableScreen::new);
+            MenuScreens.register(ModMenus.BOOKSHELF_CONTAINER.get(), BookshelfScreen::new); // Attach our container to the screen
             //ItemBlockRenderTypes.setRenderLayer(ModBlocks.INSCRIBING_TABLE, RenderType.translucent()); // Set the render type for our power generator to translucent
         });
     }

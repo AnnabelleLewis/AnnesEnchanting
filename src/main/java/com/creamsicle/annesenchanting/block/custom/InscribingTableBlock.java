@@ -1,6 +1,6 @@
 package com.creamsicle.annesenchanting.block.custom;
 
-import com.creamsicle.annesenchanting.container.InscribingTableContainer;
+import com.creamsicle.annesenchanting.container.InscribingTableMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -43,7 +43,7 @@ public class InscribingTableBlock extends Block {
 
                     @Override
                     public AbstractContainerMenu createMenu(int windowId, Inventory playerInventory, Player playerEntity) {
-                        return new InscribingTableContainer(windowId, pos, playerInventory, playerEntity);
+                        return new InscribingTableMenu(windowId, pos, playerInventory, playerEntity);
                     }
                 };
                 NetworkHooks.openGui((ServerPlayer) player, containerProvider, pos);

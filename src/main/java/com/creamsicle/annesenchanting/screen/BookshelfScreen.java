@@ -1,7 +1,7 @@
 package com.creamsicle.annesenchanting.screen;
 
 import com.creamsicle.annesenchanting.AnnesEnchanting;
-import com.creamsicle.annesenchanting.container.InscribingTableMenu;
+import com.creamsicle.annesenchanting.container.BookshelfMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -10,11 +10,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class InscribingTableScreen extends AbstractContainerScreen<InscribingTableMenu> {
+public class BookshelfScreen extends AbstractContainerScreen<BookshelfMenu> {
 
-    private ResourceLocation GUI = new ResourceLocation(AnnesEnchanting.MOD_ID,"textures/gui/inscribing_table_gui.png");
+    private ResourceLocation GUI = new ResourceLocation(AnnesEnchanting.MOD_ID,"textures/gui/bookshelf_gui.png");
 
-    public InscribingTableScreen(InscribingTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public BookshelfScreen(BookshelfMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
 
     }
@@ -32,7 +32,7 @@ public class InscribingTableScreen extends AbstractContainerScreen<InscribingTab
 
     @Override
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        drawString(pPoseStack, Minecraft.getInstance().font, "Inscribing", 10,10, 0xffffff);
+        drawString(pPoseStack, Minecraft.getInstance().font, "Bookshelf", 10,10, 0xffffff);
     }
 
 

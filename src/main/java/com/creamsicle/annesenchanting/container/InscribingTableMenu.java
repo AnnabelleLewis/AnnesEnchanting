@@ -10,30 +10,21 @@ package com.creamsicle.annesenchanting.container;
 * */
 
 import com.creamsicle.annesenchanting.data.recipes.InscribingTableRecipe;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.UpgradeRecipe;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 
-public class InscribingTableContainer extends AbstractContainerMenu  {
+public class InscribingTableMenu extends AbstractContainerMenu  {
 
     private BlockPos blockPos;
     private Player playerEntity;
@@ -46,13 +37,13 @@ public class InscribingTableContainer extends AbstractContainerMenu  {
          */
         public void setChanged() {
             super.setChanged();
-            InscribingTableContainer.this.slotsChanged(this);
+            InscribingTableMenu.this.slotsChanged(this);
         }
 
     };
 
-    public InscribingTableContainer(int windowId, BlockPos pos, Inventory playerInventory, Player player) {
-        super(ModContainers.INSCRIBING_TABLE_CONTAINER.get(), windowId);
+    public InscribingTableMenu(int windowId, BlockPos pos, Inventory playerInventory, Player player) {
+        super(ModMenus.INSCRIBING_TABLE_CONTAINER.get(), windowId);
         this.blockPos = pos;
         this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);
@@ -78,7 +69,7 @@ public class InscribingTableContainer extends AbstractContainerMenu  {
 
             @Override
             public void onTake(Player pPlayer, ItemStack pStack) {
-                InscribingTableContainer.this.outputTaken();
+                InscribingTableMenu.this.outputTaken();
             }
         });
         layoutPlayerInventorySlots(10, 80);
