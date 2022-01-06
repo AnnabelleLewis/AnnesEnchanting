@@ -1,6 +1,7 @@
 package com.creamsicle.annesenchanting.block;
 
 import com.creamsicle.annesenchanting.AnnesEnchanting;
+import com.creamsicle.annesenchanting.block.custom.AnnesEnchantmentTableBlock;
 import com.creamsicle.annesenchanting.block.custom.BookshelfBlock;
 import com.creamsicle.annesenchanting.block.custom.InscribingTableBlock;
 import com.creamsicle.annesenchanting.item.ModItems;
@@ -8,6 +9,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -26,6 +28,9 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> BOOKSHELF = registerBlock("bookshelf",
             () -> new BookshelfBlock());
+
+    public static final RegistryObject<Block> ENCHANTMENT_TABLE = registerBlock("enchantment_table",
+            () -> new AnnesEnchantmentTableBlock());
 
     private static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block){
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

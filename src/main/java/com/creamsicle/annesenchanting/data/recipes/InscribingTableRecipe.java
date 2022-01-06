@@ -1,6 +1,7 @@
 package com.creamsicle.annesenchanting.data.recipes;
 
 import com.creamsicle.annesenchanting.AnnesEnchanting;
+import com.creamsicle.annesenchanting.data.dataclasses.EnchKVPair;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
@@ -192,34 +193,5 @@ public class InscribingTableRecipe implements Recipe<SimpleContainer> {
 
     }
 
-    //Handler for associating the encantmentID IE"minecraft:sharpness" and level of a given enchantment
-    private static class EnchKVPair{
-        private String enchantmentID;
-        private int enchantmnetLevel;
 
-        public EnchKVPair(String id, int level){
-            this.enchantmentID = id;
-            this.enchantmnetLevel = level;
-        }
-
-        public EnchKVPair(FriendlyByteBuf buff){
-            this.enchantmentID = buff.readUtf();
-            this.enchantmnetLevel = buff.readInt();
-        }
-
-        public String GetID(){return enchantmentID;}
-        public int GetLevel(){return enchantmnetLevel;}
-
-        public void WriteToFriendlyByteBuff(FriendlyByteBuf buff){
-            buff.writeUtf(enchantmentID);
-            buff.writeInt(enchantmnetLevel);
-        }
-
-        public EnchantmentInstance toEnchantmentInstance(){
-            return new EnchantmentInstance(
-                    ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(enchantmentID)),
-                    enchantmnetLevel
-            );
-        }
-    }
 }

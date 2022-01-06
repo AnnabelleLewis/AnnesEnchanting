@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -30,6 +31,12 @@ public class BookshelfBlock extends Block implements EntityBlock {
                 .strength(1.5f)
                 .sound(SoundType.WOOD));
     }
+
+    @Override
+    public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
+        return 1;
+    }
+
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
                                  Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         System.out.println("attempting interaction");

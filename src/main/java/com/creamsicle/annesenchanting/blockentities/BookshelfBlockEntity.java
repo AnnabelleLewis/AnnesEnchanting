@@ -1,6 +1,7 @@
 package com.creamsicle.annesenchanting.blockentities;
 
 import com.creamsicle.annesenchanting.container.BookshelfMenu;
+import com.creamsicle.annesenchanting.data.dataclasses.EnchKVPair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +13,10 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -23,6 +28,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class BookshelfBlockEntity extends BlockEntity implements MenuProvider {
 
@@ -93,5 +101,20 @@ public class BookshelfBlockEntity extends BlockEntity implements MenuProvider {
         }
 
         Containers.dropContents(this.level, this.worldPosition, inventory);
+    }
+
+    public ArrayList<EnchKVPair> getEnchantments(){
+        ArrayList<EnchKVPair> returnList = new ArrayList<EnchKVPair>();
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            Map<Enchantment,Integer> bookEnchants = EnchantmentHelper.getEnchantments(itemHandler.getStackInSlot(i));
+            for (Enchantment enchantment: bookEnchants.keySet()) {
+                //Map<Enchantment, Integer> newEnchant = Map.of(enchantment, bookEnchants.get(enchantment));
+                EnchKVPair newEnchant = new EnchKVPair(enchantment, bookEnchants.get(enchantment));
+                returnList.add(newEnchant);
+            }
+        }
+        return returnList;
+
+
     }
 }
